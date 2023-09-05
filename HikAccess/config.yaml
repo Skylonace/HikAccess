@@ -1,0 +1,14 @@
+name: "HikAccess"
+description: "Control de acceso para Portero HikVision"
+version: "1.0.0"
+slug: "hikaccess"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+panel_icon: mdi:home-lock
+ingress: true
+panel_title: HikAccess
