@@ -12,3 +12,7 @@ arch:
 panel_icon: mdi:home-lock
 ingress: true
 panel_title: HikAccess
+options:
+  device_ip: "0.0.0.0"
+schema:
+  device_ip: "str"

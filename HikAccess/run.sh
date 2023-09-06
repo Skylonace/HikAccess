@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/usr/bin/with-contenv bashio
 
-python3 "server.py" &
-nginx -g "daemon off;error_log /dev/stdout debug;"
+DEVICE_IP="$(bashio::config 'device_ip')"
+export DEVICE_IP
+
+nginx -g "daemon off;error_log /dev/stdout debug;" &
+python3 "server.py"

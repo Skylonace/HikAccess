@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HikAccess</title>
+    <link
+      rel="stylesheet"
+      href="{{ ingressRoot + url_for('static', filename='css/main.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Control de accesos</h1>
+    <h2>Añadir entrada</h2>
+    <br />
+    <form action="{{ ingressRoot }}/add" method="POST">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Entrada</th>
+            <th>Salida</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <input type="text" name="code" id="code" />
+            </td>
+            <td>
+              <input type="datetime-local" name="validFrom" id="validFrom" />
+            </td>
+            <td>
+              <input type="datetime-local" name="validUpTo" id="validUpTo" />
+            </td>
+            <td>
+              <input type="text" name="description" id="description" />
+            </td>
+            <td>
+              <input type="submit" value="Guardar" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+    <br />
+    <a href="{{ ingressRoot }}/">Volver</a>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HikAccess</title>
+    <link
+      rel="stylesheet"
+      href="{{ ingressRoot + url_for('static', filename='css/main.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Control de accesos</h1>
+    <h2>Editar entrada</h2>
+    <br />
+    <form action="{{ ingressRoot }}/edit/{{ entry.id }}" method="POST">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Código</th>
+            <th>Entrada</th>
+            <th>Salida</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ entry.id }}</td>
+            <td>
+              <input
+                type="text"
+                name="code"
+                id="code"
+                value="{{ entry.code }}"
+              />
+            </td>
+            <td>
+              <input
+                type="datetime-local"
+                name="validFrom"
+                id="validFrom"
+                value="{{ entry.validFrom }}"
+              />
+            </td>
+            <td>
+              <input
+                type="datetime-local"
+                name="validUpTo"
+                id="validUpTo"
+                value="{{ entry.validUpTo }}"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                name="description"
+                id="description"
+                value="{{ entry.description }}"
+              />
+            </td>
+            <td>
+              <input type="submit" value="Guardar" />
+              <a href="{{ ingressRoot }}/delete/{{ entry.id }}">Borrar</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
+      <a href="{{ ingressRoot }}/">Volver</a>
+    </form>
+  </body>
+</html>

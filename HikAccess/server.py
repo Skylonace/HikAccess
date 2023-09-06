@@ -1,9 +1,10 @@
 from waitress import serve
 from app.app import app
+import sys
 
 port = 8000
 host = '0.0.0.0'
-debug = False
+debug = True
 
 def main():
     if debug:
