@@ -1,15 +1,23 @@
-from .dbmanager import purge_entries, get_active_entries
+from .dbmanager import purge_old_entries, get_active_entries
 import xml.etree.ElementTree as ET
-import requests
+import requests, time, sys
 from requests.auth import HTTPDigestAuth
 
 API_USER = "admin"
 API_PASSWORD = "Neodomo17"
 DEVICE_IP = "192.168.1.182"
 
+def intercom_thread():
+    while True:
+        update_codes()
+        time.sleep(60)
+
 def update_codes():
-    purge_entries()
-    update_intercom(get_active_entries())
+    purge_old_entries()
+    try:
+        update_intercom(get_active_entries())
+    except Exception as e:
+        print(e, file=sys.stderr)
 
 def update_intercom(active_entries):
     managed_codes = get_managed_codes()
@@ -34,7 +42,7 @@ def upload_code(code, description, slot_number, active=1):
     payload = f"""{{"PrivilegePasswordCfg":{{"passwordType":{slot_number},"newPassword":"{code}","lockIDList":[{active},0],"passwordAlias":"{description}"}}}}"""
     req = requests.put(url, auth=auth, data=payload)
     if req.status_code != 200:
-        raise Exception("Failed to upload code")
+        raise Exception("Failed to change code (status code: {str(req.status_code)})")
 
 def delete_code(slot_number):
     upload_code("", "", slot_number, active=0)
@@ -52,7 +60,7 @@ def request_intercom_codes():
     auth = HTTPDigestAuth(API_USER, API_PASSWORD)
     req = requests.get(url, auth=auth)
     if req.status_code != 200:
-        raise Exception("Failed to get intercom codes")
+        raise Exception(f"Failed to get intercom codes (status code: {str(req.status_code)})" )
     return req.content
 
 def parse_codes(XML_string):
@@ -60,15 +68,23 @@ def parse_codes(XML_string):
     code_status = []
     pw_info_list = root.find("{http://www.isapi.org/ver20/XMLSchema}passwordInfoList")
     if pw_info_list is None:
-        return code_status
+        raise Exception("Failed to parse intercom codes (bad passwordInfoList)")
     for pw_info in pw_info_list.findall("{http://www.isapi.org/ver20/XMLSchema}passwordInfo"):
         pw_type = pw_info.find("{http://www.isapi.org/ver20/XMLSchema}passwordType")
-        pw_type = pw_type.text if pw_type is not None else "1"
-        pw_index = int(pw_type.replace("public", "") if pw_type is not None else 1)
+        if pw_type is None:
+            raise Exception("Failed to parse intercom codes (bad passwordType)")
+        pw_type = pw_type.text
+        if pw_type is None:
+            raise Exception("Failed to parse intercom codes (bad passwordType)")
+        pw_index = int(pw_type.replace("public", ""))
         description = pw_info.find("{http://www.isapi.org/ver20/XMLSchema}passwordAlias")
-        description = description.text if description is not None else ""
+        if description is None:
+            raise Exception("Failed to parse intercom codes (bad passwordAlias)")
+        description = description.text
         configured = root.find(f"{{http://www.isapi.org/ver20/XMLSchema}}public{pw_index}Configured")
-        configured = "true" == configured.text if configured is not None else False
+        if configured is None:
+            raise Exception("Failed to parse intercom codes (bad publicXConfigured)")
+        configured = "true" == configured.text
         code_status.append(Code(pw_index + 5, description, configured))
     return code_status
 
@@ -86,12 +102,5 @@ class Code:
     def id(self):
         if self.auto_configured:
             return int(self.description.split("-")[1])
-        else:
-            return None
-
-    @property
-    def code(self):
-        if self.auto_configured:
-            return self.description.split("-")[2]
         else:
             return None

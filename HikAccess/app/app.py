@@ -1,17 +1,20 @@
-from flask import Flask, request, render_template, g, redirect
-from .dbmanager import init_db, purge_entries, close_db, add_entry, get_entry, edit_entry, all_entries, delete_entry, CodeEntry
+from flask import Flask, request, render_template, redirect, g
+from .dbmanager import init_db, purge_old_entries, close_db, add_entry, get_entry, edit_entry, all_entries, delete_entry, CodeEntry
+from .intercom import intercom_thread
+from threading import Thread
 
 app = Flask(__name__)
 
 @app.before_request
 def init_server():
     init_db(app)
-    purge_entries()
+    purge_old_entries()
+    g.intercom_thread = Thread(target=intercom_thread)
 
 @app.route('/', methods = ['POST', 'GET'])
 def index():
     ingress_root = request.headers.get("X-Ingress-Path", "")
-    purge_entries()
+    purge_old_entries()
     return render_template('index.html',
                            ingress_root=ingress_root,
                            entries=all_entries())

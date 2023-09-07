@@ -44,7 +44,7 @@ def edit_entry(id, entry):
                [entry.code, entry.valid_from.strftime('%Y-%m-%dT%H:%M'), entry.valid_upto.strftime('%Y-%m-%dT%H:%M'), entry.description, id])
     db.commit()
 
-def purge_entries():
+def purge_old_entries():
     db = get_db()
     db.execute('DELETE FROM t_codes WHERE valid_upto < ?', [datetime.datetime.now() - datetime.timedelta(days=7)])
     db.commit()

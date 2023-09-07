@@ -5,7 +5,7 @@ FROM $BUILD_FROM
 RUN apk add --no-cache python3 && \
 	python3 -m ensurepip && \
 	pip3 install --no-cache --upgrade pip setuptools wheel && \
-	pip3 install flask waitress requests
+	pip3 install flask requests
 
 # Copy data for add-on
 COPY server.py /
