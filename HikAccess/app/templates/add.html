@@ -6,14 +6,14 @@
     <title>HikAccess</title>
     <link
       rel="stylesheet"
-      href="{{ ingressRoot + url_for('static', filename='css/main.css') }}"
+      href="{{ ingress_root + url_for('static', filename='css/main.css') }}"
     />
   </head>
   <body>
     <h1>Control de accesos</h1>
     <h2>Añadir entrada</h2>
     <br />
-    <form action="{{ ingressRoot }}/add" method="POST">
+    <form action="{{ ingress_root }}/add" method="POST">
       <table>
         <thead>
           <tr>
@@ -29,10 +29,10 @@
               <input type="text" name="code" id="code" />
             </td>
             <td>
-              <input type="datetime-local" name="validFrom" id="validFrom" />
+              <input type="datetime-local" name="valid_from" id="valid_from" />
             </td>
             <td>
-              <input type="datetime-local" name="validUpTo" id="validUpTo" />
+              <input type="datetime-local" name="valid_upto" id="valid_upto" />
             </td>
             <td>
               <input type="text" name="description" id="description" />
@@ -45,6 +45,6 @@
       </table>
     </form>
     <br />
-    <a href="{{ ingressRoot }}/">Volver</a>
+    <a href="{{ ingress_root }}/">Volver</a>
   </body>
 </html>

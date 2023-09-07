@@ -1,5 +1,5 @@
 from flask import g
-import sqlite3
+import sqlite3, datetime
 
 DB_PATH = '/data/hikaccess.db'
 
@@ -24,7 +24,7 @@ def close_db():
 def add_entry(entry):
     db = get_db()
     db.execute('INSERT INTO t_codes (code, valid_from, valid_upto, description) values (?, ?, ?, ?)',
-               [entry.code, entry.validFrom, entry.validUpTo, entry.description])
+               [entry.code, entry.valid_from.strftime('%Y-%m-%dT%H:%M'), entry.valid_upto.strftime('%Y-%m-%dT%H:%M'), entry.description])
     db.commit()
 
 def get_entry(id):
@@ -41,7 +41,12 @@ def delete_entry(id):
 def edit_entry(id, entry):
     db = get_db()
     db.execute('UPDATE t_codes SET code = ?, valid_from = ?, valid_upto = ?, description = ? WHERE id = ?',
-               [entry.code, entry.validFrom, entry.validUpTo, entry.description, id])
+               [entry.code, entry.valid_from.strftime('%Y-%m-%dT%H:%M'), entry.valid_upto.strftime('%Y-%m-%dT%H:%M'), entry.description, id])
+    db.commit()
+
+def purge_entries():
+    db = get_db()
+    db.execute('DELETE FROM t_codes WHERE valid_upto < ?', [datetime.datetime.now() - datetime.timedelta(days=7)])
     db.commit()
 
 def all_entries():
@@ -49,10 +54,26 @@ def all_entries():
     cursor = db.execute('SELECT id, code, valid_from, valid_upto, description FROM t_codes ORDER BY id DESC')
     return [CodeEntry(row[0], row[1], row[2], row[3], row[4]) for row in cursor.fetchall()]
 
+def get_active_entries():
+    entries = all_entries()
+    active_entries = []
+    for entry in entries:
+        if entry.active:
+            active_entries.append(entry)
+    return active_entries
+
 class CodeEntry:
-    def __init__(self, id, code, validFrom, validUpTo, description) -> None:
+    def __init__(self, id, code, valid_from, valid_upto, description) -> None:
         self.id = id
         self.code = code
-        self.validFrom = validFrom
-        self.validUpTo = validUpTo
+        self.valid_from = datetime.datetime.strptime(valid_from, '%Y-%m-%dT%H:%M')
+        self.valid_upto = datetime.datetime.strptime(valid_upto, '%Y-%m-%dT%H:%M')
         self.description = description
+
+    @property
+    def active(self):
+        activation_threshold = datetime.datetime.now() + datetime.timedelta(minutes=15)
+        deactivation_threshold = datetime.datetime.now() - datetime.timedelta(minutes=15)
+        if self.valid_from < activation_threshold and self.valid_upto > deactivation_threshold:
+            return True
+        return False

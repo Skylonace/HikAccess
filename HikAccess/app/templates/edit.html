@@ -6,14 +6,14 @@
     <title>HikAccess</title>
     <link
       rel="stylesheet"
-      href="{{ ingressRoot + url_for('static', filename='css/main.css') }}"
+      href="{{ ingress_root + url_for('static', filename='css/main.css') }}"
     />
   </head>
   <body>
     <h1>Control de accesos</h1>
     <h2>Editar entrada</h2>
     <br />
-    <form action="{{ ingressRoot }}/edit/{{ entry.id }}" method="POST">
+    <form action="{{ ingress_root }}/edit/{{ entry.id }}" method="POST">
       <table>
         <thead>
           <tr>
@@ -38,17 +38,17 @@
             <td>
               <input
                 type="datetime-local"
-                name="validFrom"
-                id="validFrom"
-                value="{{ entry.validFrom }}"
+                name="valid_from"
+                id="valid_from"
+                value="{{ entry.valid_from }}"
               />
             </td>
             <td>
               <input
                 type="datetime-local"
-                name="validUpTo"
-                id="validUpTo"
-                value="{{ entry.validUpTo }}"
+                name="valid_upto"
+                id="valid_upto"
+                value="{{ entry.valid_upto }}"
               />
             </td>
             <td>
@@ -61,13 +61,13 @@
             </td>
             <td>
               <input type="submit" value="Guardar" />
-              <a href="{{ ingressRoot }}/delete/{{ entry.id }}">Borrar</a>
+              <a href="{{ ingress_root }}/delete/{{ entry.id }}">Borrar</a>
             </td>
           </tr>
         </tbody>
       </table>
       <br />
-      <a href="{{ ingressRoot }}/">Volver</a>
+      <a href="{{ ingress_root }}/">Volver</a>
     </form>
   </body>
 </html>

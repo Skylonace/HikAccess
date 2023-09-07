@@ -6,7 +6,7 @@
     <title>HikAccess</title>
     <link
       rel="stylesheet"
-      href="{{ ingressRoot + url_for('static', filename='css/main.css') }}"
+      href="{{ ingress_root + url_for('static', filename='css/main.css') }}"
     />
   </head>
   <body>
@@ -29,20 +29,24 @@
         </tr>
         {% endif %} {% for entry in entries %}
         <tr>
-          <td>{{ entry.id }}</td>
+          {% if entry.isActive() %}
+          <td style="color: green">{{ entry.id }}</td>
+          {% else %}
+          <td style="color: red">{{ entry.id }}</td>
+          {% endif %}
           <td>{{ entry.code }}</td>
-          <td>{{ entry.validFrom }}</td>
-          <td>{{ entry.validUpTo }}</td>
+          <td>{{ entry.valid_from }}</td>
+          <td>{{ entry.valid_upto }}</td>
           <td>{{ entry.description }}</td>
           <td>
-            <a href="{{ ingressRoot }}/delete/{{ entry.id }}">Borrar</a>
-            <a href="{{ ingressRoot }}/edit/{{ entry.id }}">Editar</a>
+            <a href="{{ ingress_root }}/delete/{{ entry.id }}">Borrar</a>
+            <a href="{{ ingress_root }}/edit/{{ entry.id }}">Editar</a>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
     <br />
-    <a href="{{ ingressRoot }}/add">Añadir</a>
+    <a href="{{ ingress_root }}/add">Añadir</a>
   </body>
 </html>
