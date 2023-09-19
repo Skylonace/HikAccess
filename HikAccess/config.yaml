@@ -12,3 +12,4 @@ arch:
 panel_icon: mdi:home-lock
 ingress: true
 panel_title: HikAccess
+host_network: true

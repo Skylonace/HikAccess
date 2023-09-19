@@ -42,7 +42,7 @@ def upload_code(code, description, slot_number, active=1):
     payload = f"""{{"PrivilegePasswordCfg":{{"passwordType":{slot_number},"newPassword":"{code}","lockIDList":[{active},0],"passwordAlias":"{description}"}}}}"""
     req = requests.put(url, auth=auth, data=payload)
     if req.status_code != 200:
-        raise Exception("Failed to change code (status code: {str(req.status_code)})")
+        raise Exception(f"Failed to change code (status code: {str(req.status_code)})")
 
 def delete_code(slot_number):
     upload_code("", "", slot_number, active=0)
