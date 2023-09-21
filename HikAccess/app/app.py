@@ -77,7 +77,7 @@ def edit_intercom(slot_number):
     if request.method == 'POST':
         upload_code(request.form['code'],request.form['description'], slot_number)
         return redirect(ingress_root + '/intercom')
-    return render_template('edit.html',ingress_root=ingress_root, slot_number=slot_number)
+    return render_template('edit_code.html',ingress_root=ingress_root, slot_number=slot_number)
 
 @app.teardown_appcontext
 def close_connection(exception):
