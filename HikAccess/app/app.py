@@ -57,7 +57,7 @@ def intercom_info():
     codes = []
     msg = ""
     try:
-        parse_codes(request_intercom_codes())
+        codes = parse_codes(request_intercom_codes())
     except Exception as e:
         msg = e
     return render_template('intercom.html', ingress_root=ingress_root, codes=codes, msg=msg)
