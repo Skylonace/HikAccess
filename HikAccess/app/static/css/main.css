@@ -1,3 +1,170 @@
 body {
-    background-color: white;
+    background-color: #111111;
+    color: #e1e1e1;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', 'Noto', sans-serif;
+}
+
+.title-bar {
+    background-color: #101e24;
+    width: 100%;
+    margin: 0;
+    padding: 16px 24px;
+    box-sizing: border-box;
+    height: 56px;
+    font-size: 17.5px;
+    border-color: #e1e1e11f;
+    border-bottom-style: solid;
+    border-width: 1px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #212121;
+    height: 56px;
+    box-sizing: border-box;
+    border-color: #e1e1e11f;
+    border-bottom-style: solid;
+    border-width: 1px;
+}
+
+.navbar li {
+    padding: 0;
+    float: left;
+}
+
+.navbar a {
+    display: block;
+    background-color: #101e24;
+    color: #e1e1e1;
+    text-align: center;
+    padding: 8px 12px;
+    margin: 8px 12px;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 8px;
+    border-color: #e1e1e11f;
+    border-style: solid;
+    border-width: 1px;
+}
+.navbar a:hover{
+    background-color: #215870;
+}
+
+.navbar a:active{
+    background-color: #2785ad;
+}
+
+.content {
+    margin: 16px;
+    padding: 16px;
+    height: 100%;
+    border-radius: 8px;
+    background-color: #212121;
+    border-color: #e1e1e11f;
+    border-style: solid;
+    border-width: 1px;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 24px;
+    margin: 0 0 16px 0;
+    padding: 0;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.foot {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: right;
+}
+
+.foot a {
+    color: #e1e1e1;
+    background-color: #101e24;
+    text-align: center;
+    padding: 8px 12px;
+    margin: 8px 12px;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 8px;
+    border-color: #e1e1e11f;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.foot a:hover{
+    background-color: #215870;
+}
+
+.foot a:active{
+    background-color: #2785ad;
+}
+
+p {
+    margin: 0;
+    padding: 16px;
+    text-align: center;
+}
+
+tr {
+    border-bottom: 1px solid #e1e1e11f;
+    text-align: center;
+}
+
+tr a {
+    color: #e1e1e1;
+    text-decoration: none;
+}
+
+tr a:hover {
+    text-decoration: underline;
+}
+
+form {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+}
+
+form input {
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 8px;
+    border-color: #e1e1e11f;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.button {
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 8px;
+    border-color: #e1e1e11f;
+    border-style: solid;
+    border-width: 1px;
+    background-color: #101e24;
+    color: #e1e1e1;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: #215870;
 }

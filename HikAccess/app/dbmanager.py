@@ -3,6 +3,22 @@ import sqlite3, datetime
 
 DB_PATH = '/data/hikaccess.db'
 
+class CodeEntry:
+    def __init__(self, id, code, valid_from, valid_upto, description) -> None:
+        self.id = id
+        self.code = code
+        self.valid_from = datetime.datetime.strptime(valid_from, '%Y-%m-%dT%H:%M')
+        self.valid_upto = datetime.datetime.strptime(valid_upto, '%Y-%m-%dT%H:%M')
+        self.description = description
+
+    @property
+    def active(self):
+        activation_threshold = datetime.datetime.now() + datetime.timedelta(minutes=15)
+        deactivation_threshold = datetime.datetime.now() - datetime.timedelta(minutes=15)
+        if self.valid_from < activation_threshold and self.valid_upto > deactivation_threshold:
+            return True
+        return False
+
 def init_db(app):
     with app.app_context():
         db = get_db()
@@ -10,7 +26,7 @@ def init_db(app):
             db.cursor().executescript(f.read())
         db.commit()
 
-def get_db():
+def get_db() -> sqlite3.Connection:
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DB_PATH)
@@ -27,7 +43,7 @@ def add_entry(entry):
                [entry.code, entry.valid_from.strftime('%Y-%m-%dT%H:%M'), entry.valid_upto.strftime('%Y-%m-%dT%H:%M'), entry.description])
     db.commit()
 
-def get_entry(id):
+def get_entry(id) -> CodeEntry:
     db = get_db()
     cursor = db.execute('SELECT id, code, valid_from, valid_upto, description FROM t_codes WHERE id = ?', [id])
     row = cursor.fetchone()
@@ -49,31 +65,15 @@ def purge_old_entries():
     db.execute('DELETE FROM t_codes WHERE valid_upto < ?', [datetime.datetime.now() - datetime.timedelta(days=7)])
     db.commit()
 
-def all_entries():
+def all_entries() -> list[CodeEntry]:
     db = get_db()
     cursor = db.execute('SELECT id, code, valid_from, valid_upto, description FROM t_codes ORDER BY id DESC')
     return [CodeEntry(row[0], row[1], row[2], row[3], row[4]) for row in cursor.fetchall()]
 
-def get_active_entries():
+def get_active_entries() -> list[CodeEntry]:
     entries = all_entries()
     active_entries = []
     for entry in entries:
         if entry.active:
             active_entries.append(entry)
     return active_entries
-
-class CodeEntry:
-    def __init__(self, id, code, valid_from, valid_upto, description) -> None:
-        self.id = id
-        self.code = code
-        self.valid_from = datetime.datetime.strptime(valid_from, '%Y-%m-%dT%H:%M')
-        self.valid_upto = datetime.datetime.strptime(valid_upto, '%Y-%m-%dT%H:%M')
-        self.description = description
-
-    @property
-    def active(self):
-        activation_threshold = datetime.datetime.now() + datetime.timedelta(minutes=15)
-        deactivation_threshold = datetime.datetime.now() - datetime.timedelta(minutes=15)
-        if self.valid_from < activation_threshold and self.valid_upto > deactivation_threshold:
-            return True
-        return False

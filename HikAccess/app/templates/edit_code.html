@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block content %}
+<h1>Editar código</h1>
+<br />
+<form action="{{ ingress_root }}/edit_code/{{ slot_number }}" method="POST">
+  <label for="code">Código (4 a 6 números del 1 al 9)</label>
+  <input type="text" pattern="[1-9]{4,6}" name="code" id="code" required />
+  <label for="description">Descripción (Max 60 car ASCII)</label>
+  <input
+    type="text"
+    pattern="[ -~]{0,60}"
+    name="description"
+    id="description"
+  />
+  <input class="button" type="submit" value="Editar" />
+  <a class="button" href="{{ ingress_root }}/delete_code/{{ slot_number }}"
+    >Borrar</a
+  >
+</form>
+<br />
+<div class="foot"><a href="{{ ingress_root }}/">Volver</a></div>
+{% endblock %}

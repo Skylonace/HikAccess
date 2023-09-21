@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block content %}
+<h1>Entradas</h1>
+{% if entries.__len__() == 0 %}
+<p>No hay entradas</p>
+{% else %}
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Código</th>
+      <th>Entrada</th>
+      <th>Salida</th>
+      <th>Descripción</th>
+      <th colspan="2">Opciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in entries %}
+    <tr>
+      {% if entry.active %}
+      <td style="color: green">{{ entry.id }}</td>
+      {% else %}
+      <td style="color: red">{{ entry.id }}</td>
+      {% endif %}
+      <td>{{ entry.code }}</td>
+      <td>{{ entry.valid_from }}</td>
+      <td>{{ entry.valid_upto }}</td>
+      <td>{{ entry.description }}</td>
+      <td><a href="{{ ingress_root }}/edit/{{ entry.id }}">Editar</a></td>
+      <td><a href="{{ ingress_root }}/delete/{{ entry.id }}">Borrar</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+<div class="foot"><a href="{{ ingress_root }}/add">Añadir entrada</a></div>
+{% endblock %}

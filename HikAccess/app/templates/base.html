@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HikAccess</title>
+    <link
+      rel="stylesheet"
+      href="{{ ingress_root + url_for('static', filename='css/main.css') }}"
+    />
+  </head>
+  <body>
+    <div class="title-bar">Control de accesos</div>
+    <div class="navbar">
+      <ul>
+        <li><a href="{{ ingress_root }}/">Entradas</a></li>
+        <li><a href="{{ ingress_root }}/intercom">Intercom</a></li>
+        <li><a href="{{ ingress_root }}/options">Opciones</a></li>
+        <li><a href="{{ ingress_root }}/logs">Logs</a></li>
+      </ul>
+    </div>
+    <div class="content">{% block content %}{% endblock %}</div>
+  </body>
+</html>

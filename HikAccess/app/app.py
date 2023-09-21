@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, g
 from .dbmanager import init_db, purge_old_entries, close_db, add_entry, get_entry, edit_entry, all_entries, delete_entry, CodeEntry
-from .intercom import intercom_thread, request_intercom_codes, parse_codes, Code
+from .intercom import intercom_thread, request_intercom_codes, parse_codes, delete_code, upload_code, Code
 from threading import Thread
 
 app = Flask(__name__)
@@ -12,10 +12,10 @@ def init_server():
     g.intercom_thread = Thread(target=intercom_thread)
 
 @app.route('/', methods = ['POST', 'GET'])
-def index():
+def entries():
     ingress_root = request.headers.get("X-Ingress-Path", "")
     purge_old_entries()
-    return render_template('index.html',
+    return render_template('entries.html',
                            ingress_root=ingress_root,
                            entries=all_entries())
 
@@ -61,6 +61,23 @@ def intercom_info():
     except Exception as e:
         msg = e
     return render_template('intercom.html', ingress_root=ingress_root, codes=codes, msg=msg)
+
+@app.route('/delete_code/<int:slot_number>')
+def delete_intercom(slot_number):
+    ingress_root = request.headers.get("X-Ingress-Path", "")
+    try:
+        delete_code(slot_number)
+    except Exception as e:
+        print(e)
+    return redirect(ingress_root + '/intercom')
+
+@app.route('/edit_code/<int:slot_number>', methods=['GET', 'POST'])
+def edit_intercom(slot_number):
+    ingress_root = request.headers.get("X-Ingress-Path", "")
+    if request.method == 'POST':
+        upload_code(request.form['code'],request.form['description'], slot_number)
+        return redirect(ingress_root + '/intercom')
+    return render_template('edit.html',ingress_root=ingress_root, slot_number=slot_number)
 
 @app.teardown_appcontext
 def close_connection(exception):

@@ -1,73 +1,43 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HikAccess</title>
-    <link
-      rel="stylesheet"
-      href="{{ ingress_root + url_for('static', filename='css/main.css') }}"
-    />
-  </head>
-  <body>
-    <h1>Control de accesos</h1>
-    <h2>Editar entrada</h2>
-    <br />
-    <form action="{{ ingress_root }}/edit/{{ entry.id }}" method="POST">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Código</th>
-            <th>Entrada</th>
-            <th>Salida</th>
-            <th>Descripción</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ entry.id }}</td>
-            <td>
-              <input
-                type="text"
-                name="code"
-                id="code"
-                value="{{ entry.code }}"
-              />
-            </td>
-            <td>
-              <input
-                type="datetime-local"
-                name="valid_from"
-                id="valid_from"
-                value="{{ entry.valid_from }}"
-              />
-            </td>
-            <td>
-              <input
-                type="datetime-local"
-                name="valid_upto"
-                id="valid_upto"
-                value="{{ entry.valid_upto }}"
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                name="description"
-                id="description"
-                value="{{ entry.description }}"
-              />
-            </td>
-            <td>
-              <input type="submit" value="Guardar" />
-              <a href="{{ ingress_root }}/delete/{{ entry.id }}">Borrar</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <br />
-      <a href="{{ ingress_root }}/">Volver</a>
-    </form>
-  </body>
-</html>
+{% extends "base.html" %} {% block content %}
+<h1>Editar entrada</h1>
+<br />
+<form action="{{ ingress_root }}/edit/{{ entry.id }}" method="POST">
+  <label for="code">Código (4 a 6 números del 1 al 9)</label>
+  <input
+    type="text"
+    pattern="[1-9]{4,6}"
+    name="code"
+    id="code"
+    value="{{ entry.code }}"
+    required
+  />
+  <label for="valid_from">Entrada</label>
+  <input
+    type="datetime-local"
+    name="valid_from"
+    id="valid_from"
+    value="{{ entry.valid_from }}"
+    required
+  />
+  <label for="valid_upto">Salida</label>
+  <input
+    type="datetime-local"
+    name="valid_upto"
+    id="valid_upto"
+    value="{{ entry.valid_upto }}"
+    required
+  />
+  <label for="description">Descripción (Max 60 car)</label>
+  <input
+    type="text"
+    pattern=".{0,60}"
+    name="description"
+    id="description"
+    value="{{ entry.description }}"
+  />
+  <input class="button" type="submit" value="Editar" />
+  <a class="button" href="{{ ingress_root }}/delete/{{ entry.id }}">Borrar</a>
+</form>
+<br />
+<div class="foot"><a href="{{ ingress_root }}/">Volver</a></div>
+{% endblock %}

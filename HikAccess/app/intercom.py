@@ -1,4 +1,4 @@
-from .dbmanager import purge_old_entries, get_active_entries
+from .dbmanager import purge_old_entries, get_active_entries, CodeEntry
 import xml.etree.ElementTree as ET
 import requests, time, sys
 from requests.auth import HTTPDigestAuth
@@ -6,6 +6,23 @@ from requests.auth import HTTPDigestAuth
 API_USER = "admin"
 API_PASSWORD = "Neodomo17"
 DEVICE_IP = "192.168.1.182"
+
+class Code:
+    def __init__(self, slot_number, description, configured):
+        self.slot_number = slot_number
+        self.description = description
+        self.configured = configured
+
+    @property
+    def auto_configured(self):
+        return self.description.startswith("AUTO-")
+
+    @property
+    def id(self):
+        if self.auto_configured:
+            return int(self.description.split("-")[1])
+        else:
+            return None
 
 def intercom_thread():
     while True:
@@ -19,7 +36,7 @@ def update_codes():
     except Exception as e:
         print(e, file=sys.stderr)
 
-def update_intercom(active_entries):
+def update_intercom(active_entries : list[CodeEntry]):
     managed_codes = get_managed_codes()
     avaliable_codes = []
     # Removing invalid codes
@@ -47,7 +64,7 @@ def upload_code(code, description, slot_number, active=1):
 def delete_code(slot_number):
     upload_code("", "", slot_number, active=0)
 
-def get_managed_codes():
+def get_managed_codes() -> list[Code]:
     codes = parse_codes(request_intercom_codes())
     writeable_codes = []
     for code in codes:
@@ -63,7 +80,7 @@ def request_intercom_codes():
         raise Exception(f"Failed to get intercom codes (status code: {str(req.status_code)})" )
     return req.content
 
-def parse_codes(XML_string):
+def parse_codes(XML_string) -> list[Code]:
     root = ET.fromstring(XML_string)
     code_status = []
     pw_info_list = root.find("{http://www.isapi.org/ver20/XMLSchema}passwordInfoList")
@@ -87,20 +104,3 @@ def parse_codes(XML_string):
         configured = "true" == configured.text
         code_status.append(Code(pw_index + 5, description, configured))
     return code_status
-
-class Code:
-    def __init__(self, slot_number, description, configured):
-        self.slot_number = slot_number
-        self.description = description
-        self.configured = configured
-
-    @property
-    def auto_configured(self):
-        return self.description.startswith("AUTO-")
-
-    @property
-    def id(self):
-        if self.auto_configured:
-            return int(self.description.split("-")[1])
-        else:
-            return None
