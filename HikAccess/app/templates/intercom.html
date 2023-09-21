@@ -10,6 +10,13 @@
     />
   </head>
   <body>
-
+    {{ msg }}
+    <br />
+    <ul>
+      {% for code in codes %}
+      <li>{{ code.slot_number }} {{ code.description }}</li>
+      {% endfor %}
+    </ul>
+    <a href="{{ ingress_root }}/">Volver</a>
   </body>
 </html>

@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, g
 from .dbmanager import init_db, purge_old_entries, close_db, add_entry, get_entry, edit_entry, all_entries, delete_entry, CodeEntry
-from .intercom import intercom_thread
+from .intercom import intercom_thread, request_intercom_codes, parse_codes, Code
 from threading import Thread
 
 app = Flask(__name__)
@@ -50,6 +50,17 @@ def add():
         add_entry(entry)
         return redirect(ingress_root + '/')
     return render_template('add.html', ingress_root=ingress_root)
+
+@app.route('/intercom')
+def intercom_info():
+    ingress_root = request.headers.get("X-Ingress-Path", "")
+    codes = []
+    msg = ""
+    try:
+        parse_codes(request_intercom_codes())
+    except Exception as e:
+        msg = e
+    return render_template('intercom.html', ingress_root=ingress_root, codes=codes, msg=msg)
 
 @app.teardown_appcontext
 def close_connection(exception):
