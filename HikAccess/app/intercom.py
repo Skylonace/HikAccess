@@ -102,5 +102,8 @@ def parse_codes(XML_string) -> list[Code]:
         if configured is None:
             raise Exception("Failed to parse intercom codes (bad publicXConfigured)")
         configured = "true" == configured.text
-        code_status.append(Code(pw_index + 5, description, configured))
+        slot_number = pw_index + 4
+        if(slot_number >= 8):
+            slot_number = slot_number + 1
+        code_status.append(Code(slot_number, description, configured))
     return code_status
