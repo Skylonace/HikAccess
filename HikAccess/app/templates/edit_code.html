@@ -2,8 +2,8 @@
 <h1>Editar código</h1>
 <br />
 <form action="{{ ingress_root }}/edit_code/{{ slot_number }}" method="POST">
-  <label for="code">Código (4 a 6 números del 1 al 9)</label>
-  <input type="text" pattern="[1-9]{4,6}" name="code" id="code" required />
+  <label for="code">Código (4 a 6 números del 0 al 9)</label>
+  <input type="text" pattern="[0-9]{4,6}" name="code" id="code" required />
   <label for="description">Descripción (Max 60 car ASCII)</label>
   <input
     type="text"
